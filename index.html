@@ -35,16 +35,44 @@
   </div>
 
   <script>
+
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const christmas = new Date(today.getFullYear(), 11, 25);
+    const newYear = new Date(today.getFullYear() + 1, 0, 1);
+
+    const daysElement = document.getElementById("days");
 
     if (today.getTime() === christmas.getTime()) {
-      document.getElementById("days").innerHTML = "Merry Christmas!";
+      daysElement.innerHTML = "Merry Christmas!";
+      showNotification("Merry Christmas!", "🎄 It's Christmas Day! Enjoy the celebrations!");
+    } else if (today.getTime() === newYear.getTime()) {
+      daysElement.innerHTML = "Happy New Year!";
+      showNotification("Happy New Year!", "🎆 Welcome to a new year full of opportunities!");
     } else {
       const daysToChristmas = Math.round((christmas - today) / (1000 * 60 * 60 * 24));
-      document.getElementById("days").innerHTML = daysToChristmas + " days Before Christmas!";
+      daysElement.innerHTML = daysToChristmas + " days Before Christmas!";
+
+
+      if (daysToChristmas === 1) {
+        showNotification("Almost Christmas!", "🎄 Only 1 day left until Christmas!");
+      }
+    }
+
+
+    function showNotification(title, message) {
+      if (Notification.permission === "granted") {
+        new Notification(title, {
+          body: message,
+          icon: "https://upload.wikimedia.org/wikipedia/commons/a/a3/Christmas_Tree_Icon.png"
+        });
+      }
     }
   </script>
 </body>
